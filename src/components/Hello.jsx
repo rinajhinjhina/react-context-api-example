@@ -4,13 +4,24 @@ import Header from './Header';
 import authContext from '../store';
 
 const Hello = () => {
-	const auth = useContext(authContext);
+	const [ { isLoggedIn, username }, dispatch ] = useContext(authContext);
+	const logOut = () => {
+		dispatch({
+			type: 'LOGOUT'
+		});
+	};
 	return (
 		<Fragment>
-			<Header>Well hello there, stranger</Header>
-			<p>
-				Click <Link to="/login">here</Link> to login
-			</p>
+			<Header>{`Well hello there, ${isLoggedIn ? username : 'stranger'}`}</Header>
+			{isLoggedIn ? (
+				<p>
+					Click <Link to="/" onClick={logOut}>here</Link> to logout
+				</p>
+			) : (
+				<p>
+					Click <Link to="/login">here</Link> to login
+				</p>
+			)}
 		</Fragment>
 	);
 };

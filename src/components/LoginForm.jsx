@@ -15,7 +15,7 @@ const LoginForm = () => {
 	useEffect(
 		() => {
 			if (isLoggedIn) {
-				window.href = '/';
+				window.location = '/';
 			}
 		},
 		[ isLoggedIn ]
