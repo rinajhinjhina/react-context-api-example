@@ -2,16 +2,9 @@ export default (formData) => {
 	return new Promise((resolve, reject) => {
 		setTimeout(() => {
 			if (formData.username === 'Rohan' && formData.password === 'rohan123' ? true : false) {
-				resolve({
-					isLoggedIn: true,
-					username: formData.username,
-					loggedInAt: Date.now() / 1000
-				});
+				resolve(formData.username);
 			} else {
-				reject({
-					isLoggedIn: false,
-					loginFailedAt: Date.now() / 1000
-				});
+				reject('Username and password is incorrect');
 			}
 		}, 1000);
 	});

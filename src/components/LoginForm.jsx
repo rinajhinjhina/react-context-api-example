@@ -1,7 +1,8 @@
-import React, { useState, Fragment } from 'react';
+import React, { useState, useContext, useEffect, Fragment } from 'react';
+import { Link } from 'react-router-dom';
 import Spinner from './Spinner';
-import { Link } from 'react-router-dom/cjs/react-router-dom';
-import isLoggedIn from '../auth';
+import authContext from '../store';
+import attemptLogin from '../auth/attemptLogin';
 
 const LoginForm = () => {
 	const [ loading, setLoading ] = useState(false);
@@ -9,6 +10,41 @@ const LoginForm = () => {
 		username: '',
 		password: ''
 	});
+	const [ { isLoggedIn, error }, dispatch ] = useContext(authContext);
+
+	useEffect(
+		() => {
+			if (isLoggedIn) {
+				window.href = '/';
+			}
+		},
+		[ isLoggedIn ]
+	);
+
+	function onSubmit(event) {
+		event.preventDefault();
+		setLoading(true);
+		attemptLogin(formData)
+			.then((username) => {
+				dispatch({
+					type: 'LOGIN',
+					payload: {
+						username
+					}
+				});
+			})
+			.catch((error) => {
+				dispatch({
+					type: 'LOGIN_ERROR',
+					payload: {
+						error
+					}
+				});
+			})
+			.finally(() => {
+				setLoading(false);
+			});
+	}
 
 	function onChange(event) {
 		const { name, value } = event.target;
@@ -18,16 +54,11 @@ const LoginForm = () => {
 		}));
 	}
 
-	function attemptLogin(event) {
-		event.preventDefault();
-		setLoading(true);
-		setLoading(false);
-	}
-
 	return (
 		<Fragment>
 			<Link to="/">Back to home</Link>
-			<form onSubmit={attemptLogin}>
+			{error && <p className="error">{error}</p>}
+			<form onSubmit={onSubmit}>
 				<input
 					type="text"
 					name="username"

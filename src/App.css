@@ -47,3 +47,8 @@ form > button[disabled] {
 form > button > img {
 	margin-right: 0.5em;
 }
+
+.error {
+	color: red;
+	font-style: italic;
+}
