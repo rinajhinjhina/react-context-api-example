@@ -21,12 +21,7 @@ const LoginForm = () => {
 	function attemptLogin(event) {
 		event.preventDefault();
 		setLoading(true);
-		setTimeout(() => {
-			setLoading(false);
-			if (isLoggedIn) {
-				// set loggedIn to true
-			}
-		}, 1000);
+		setLoading(false);
 	}
 
 	return (
