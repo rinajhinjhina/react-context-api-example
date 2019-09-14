@@ -1,8 +1,8 @@
-import React, { useState, useContext, useEffect, Fragment } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState, useContext, Fragment } from 'react';
+import { Link, Redirect } from 'react-router-dom';
 import Spinner from './Spinner';
 import authContext from '../store';
-import attemptLogin from '../auth/attemptLogin';
+import attemptLogin from '../auth/fakeAuth';
 
 const LoginForm = () => {
 	const [ loading, setLoading ] = useState(false);
@@ -11,15 +11,6 @@ const LoginForm = () => {
 		password: ''
 	});
 	const [ { isLoggedIn, error }, dispatch ] = useContext(authContext);
-
-	useEffect(
-		() => {
-			if (isLoggedIn) {
-				window.location = '/';
-			}
-		},
-		[ isLoggedIn ]
-	);
 
 	function onSubmit(event) {
 		event.preventDefault();
@@ -56,28 +47,34 @@ const LoginForm = () => {
 
 	return (
 		<Fragment>
-			<Link to="/">Back to home</Link>
-			{error && <p className="error">{error}</p>}
-			<form onSubmit={onSubmit}>
-				<input
-					type="text"
-					name="username"
-					value={formData.username}
-					onChange={onChange}
-					placeholder="Username"
-				/>
-				<input
-					type="password"
-					name="password"
-					placeholder="Password"
-					value={formData.password}
-					onChange={onChange}
-				/>
-				<button type="submit" disabled={loading}>
-					{!!loading && <Spinner width="15px" />}
-					<span>{!!loading ? 'Please wait' : 'Log In'}</span>
-				</button>
-			</form>
+			{isLoggedIn ? (
+				<Redirect to="/" />
+			) : (
+				<Fragment>
+					<Link to="/">Back to home</Link>
+					{error && <p className="error">{error}</p>}
+					<form onSubmit={onSubmit}>
+						<input
+							type="text"
+							name="username"
+							value={formData.username}
+							onChange={onChange}
+							placeholder="Username"
+						/>
+						<input
+							type="password"
+							name="password"
+							placeholder="Password"
+							value={formData.password}
+							onChange={onChange}
+						/>
+						<button type="submit" disabled={loading}>
+							{!!loading && <Spinner width="15px" />}
+							<span>{!!loading ? 'Please wait' : 'Log In'}</span>
+						</button>
+					</form>
+				</Fragment>
+			)}
 		</Fragment>
 	);
 };
